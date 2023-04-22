@@ -11,7 +11,11 @@ import {useSession} from 'next-auth/react';
 import { Dropdown } from "@nextui-org/react";
 import {signOut} from 'next-auth/react';
 
-const Header = () => {
+interface itemType {
+    setShowMessage: (setValue : boolean) => void
+};
+
+const Header = ({setShowMessage} : itemType) => {
     const {data : session} = useSession();
     const [selected, setSelected] = React.useState(new Set(["more"]));
     const setSelection = (e: any) => {
@@ -29,7 +33,7 @@ const Header = () => {
             </div>
             {/* center div */}
             <div className='flex flex-grow justify-center mx-2'>
-                <div className='fex items-center'>
+                <div className='fex items-center' onClick={() => setShowMessage(false)}>
                     <div className='flex items-center h-14 px-4 md:px-10 rounded-md md:hover:bg-gray-100 cursor-pointer'>
                         <HiOutlineHome className="mx-auto" size={25}/>
                     </div>
@@ -74,6 +78,7 @@ const Header = () => {
             className=" hidden lg:inline-flex h-10 w-10 bg-gray-200 text-gray-600 rounded-full p-2 cursor-pointer hover:bg-gray-300"
             />
             <AiFillMessage
+            onClick={() => setShowMessage(true)}
             size={20}
             className=" hidden lg:inline-flex h-10 w-10 bg-gray-200 text-gray-600 rounded-full p-2 cursor-pointer hover:bg-gray-300"
             />

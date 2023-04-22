@@ -7,12 +7,15 @@ import {getSession} from 'next-auth/react';
 import Login from '@/components/Login'
 import Feed from '@/components/Feed'
 import RightSidebar from '@/components/RightSidebar'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { createOrUpdateUser } from './api/service'
+import Messaging from '@/components/Messaging/Messaging'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home({session} : any) {
+  const [showMessageScreen, setShowMessageScreen] = useState(false);
+
   useEffect(() => {
     if(session) {
       createOrUpdateUser({
@@ -32,14 +35,19 @@ export default function Home({session} : any) {
           <title>Fb clone</title>
           <meta name="description" content='Generated'></meta>
       </Head>
-      <Header/>
+      <Header setShowMessage={setShowMessageScreen}/>
       <main className='flex bg-gray-100'>
-        {/* left sidebar */}
-        <Sidebar />
-        {/* feeds */}
-        <Feed />
-        {/* right sidebar */}
-        <RightSidebar />
+        { showMessageScreen ? 
+          <Messaging /> : 
+          <>
+            {/* left sidebar */}
+            <Sidebar />
+            {/* feeds */}
+            <Feed />
+            {/* right sidebar */}
+            <RightSidebar />
+          </>
+        }
       </main>
     </div>
   )
