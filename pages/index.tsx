@@ -10,11 +10,14 @@ import RightSidebar from '@/components/RightSidebar'
 import { useEffect, useState } from 'react'
 import { createOrUpdateUser } from './api/service'
 import Messaging from '@/components/Messaging/Messaging'
-
-const inter = Inter({ subsets: ['latin'] })
+import { useDispatch } from 'react-redux'
+import { setUser } from '@/public/src/features/userSlice'
 
 export default function Home({session} : any) {
   const [showMessageScreen, setShowMessageScreen] = useState(false);
+  const [currentChatId, setCurrentCharId] = useState<any>();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if(session) {
@@ -22,9 +25,21 @@ export default function Home({session} : any) {
         name : session.user.name, 
         email : session.user.email, 
         image : session.user.image
+      }).then(user => {
+        dispatch(setUser(user.data));
       });
     }
   }, [session]);
+
+  useEffect(() => {
+    if(currentChatId)
+      setShowMessageScreen(true);
+  }, [currentChatId]);
+
+  useEffect(() => {
+    if(!showMessageScreen)
+      setCurrentCharId(null);
+  }, [showMessageScreen])
 
   if(!session)
     return <Login />;
@@ -38,14 +53,14 @@ export default function Home({session} : any) {
       <Header setShowMessage={setShowMessageScreen}/>
       <main className='flex bg-gray-100'>
         { showMessageScreen ? 
-          <Messaging /> : 
+          <Messaging id={currentChatId} /> : 
           <>
             {/* left sidebar */}
             <Sidebar />
             {/* feeds */}
             <Feed />
             {/* right sidebar */}
-            <RightSidebar />
+            <RightSidebar setChatId={(id) => setCurrentCharId(id)} />
           </>
         }
       </main>

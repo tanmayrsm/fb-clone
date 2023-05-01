@@ -1,40 +1,42 @@
+import { MessagengerList } from "@/pages/interfaces";
+import Image from "next/image";
 import React from "react";
 
-const MessagingList = () => {
-  return (
-    <div className="py-4 flex-2 flex flex-row">
-      <div className="flex-1">
-        <span className="xl:hidden inline-block text-gray-700 hover:text-gray-900 align-bottom">
-          <span className="block h-6 w-6 p-1 rounded-full hover:bg-gray-400">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </span>
-        </span>
-        <span className="lg:hidden inline-block ml-8 text-gray-700 hover:text-gray-900 align-bottom">
-          <span className="block h-6 w-6 p-1 rounded-full hover:bg-gray-400">
-            <svg
-              className="h-4 w-4"
-              fill="none"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-            </svg>
-          </span>
-        </span>
-      </div>
+
+
+const MessagingList = (props : {messageList : { [key:string] : MessagengerList} | undefined, setChatId : (param : any) => void}) => {
+    return (
+    <div className="sidebar hidden lg:flex w-1/3 flex-2 flex-col pr-6">
+        <div className="search flex-2 pb-6 px-2">
+            <input type="text" className="outline-none py-2 block w-full bg-transparent border-b-2 border-gray-200" placeholder="Search"/>
+        </div>
+        <div className="flex-1 h-full overflow-auto px-2">
+            {
+                Object.values(props?.messageList || []).map((message, idx) => 
+                        <div key={idx} onClick={() => props.setChatId(message.messengerUserId.id)} className="entry cursor-pointer transform hover:scale-105 duration-300 transition-transform bg-white mb-4 rounded p-4 flex shadow-md">
+                            <div className="flex-2">
+                                <div className="w-12 h-12 relative">
+                                    <Image width={100} height={100} className="w-12 h-12 rounded-full mx-auto" src={message.messengerUserId.image} alt="chat-user" />
+                                    <span className="absolute w-4 h-4 bg-green-400 rounded-full right-0 bottom-0 border-2 border-white"></span>
+                                </div>
+                            </div>
+                            <div className="flex-1 px-2">
+                                <div className="truncate w-32"><span className="text-gray-800">{message.messengerUserId.name}</span></div>
+                                <div><small className="text-gray-600">{message.text}</small></div>
+                            </div>
+                            <div className="flex-2 text-right">
+                                <div><small className="text-gray-500">{message.ts}</small></div>
+                                <div>
+                                    <small className="text-xs bg-red-500 text-white rounded-full h-6 w-6 leading-6 text-center inline-block">
+                                        23
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    )
+            }
+            
+        </div>
     </div>
   );
 };

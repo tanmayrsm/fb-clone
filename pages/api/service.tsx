@@ -12,7 +12,25 @@ export const getAllPosts = () => {
 }
 
 export const createOrUpdateUser = (userData : any) => {
-    axios.put(FACEBOOK_CLONE_ENDPOINT + "/user/get", userData, {
+    return axios.put(FACEBOOK_CLONE_ENDPOINT + "/user/get", userData, {
         headers: { Accept: "application/json" },
     });
+}
+
+export const getAllUsers = (email : string) => {
+    return axios.get(FACEBOOK_CLONE_ENDPOINT + "/user/getAllUsers/" + email);
+}
+
+export const getUserById = (id : string) => {
+    return axios.get(FACEBOOK_CLONE_ENDPOINT + "/user/getUserById/" + id);
+}
+
+export const sendMessageToUser = (senderId: string, receiverId : string, grouper : string | null, message : string) => {
+    return axios.post(FACEBOOK_CLONE_ENDPOINT + "/message/post/", {senderId, receiverId, message, grouper }, {
+        headers : {Accept : "application/json"}
+    });
+}
+
+export const getAllMessages = (userId : string) => {
+    return axios.get(FACEBOOK_CLONE_ENDPOINT + "/message/get/" + userId);
 }
