@@ -64,7 +64,7 @@ const Messaging = (props : {id : any}) => {
                 setActivatedChatMapper((prev : any) => ({...prev, [props.id] : {listData : [], otherUserData : res.data}}));
                 setMessagedUsersList(prev => ({...(prev ? prev : []), [props.id] : {
                     messengerUserId : res.data,
-                    text : 'Say Hi to' + res.data.name,
+                    text : 'Say Hi to ' + res.data.name,
                 }}));
                     
             });

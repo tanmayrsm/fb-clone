@@ -1,23 +1,32 @@
 import { sendMessageToUser } from '@/pages/api/service';
 import { selectUser } from '@/public/src/features/userSlice';
 import Image from 'next/image';
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import MessagingList from './MessagingList';
+import { FaExclamation } from "react-icons/fa";
 
 const MessageArea = (props : {messagePayload : any}) => {
     const user = useSelector(selectUser);
+    const [isMessageImp, setImpMessage] = useState(false);
     const msg:any = useRef(null);
-
-    useEffect(() => {
-        // api call for all msg list for user
-        console.log("call for userid ::", user?.id);
-    }, []);
 
     const sendMessage = () => {
         if(msg?.current?.value) {
-            sendMessageToUser(user.id, props?.messagePayload?.otherUserData?.id, props?.messagePayload?.listData[0]?.grouper || null, msg.current.value);
+            sendMessageToUser(
+                user.id, 
+                props?.messagePayload?.otherUserData?.id, 
+                props?.messagePayload?.listData[0]?.grouper || null, 
+                msg.current.value, 
+                isMessageImp ? 
+                    {
+                        to : props?.messagePayload?.otherUserData?.email, 
+                        from : user.email, 
+                        text : msg.current.value,
+                        fromName : user.name
+                    } : null);
             msg.current.value = '';
+            setImpMessage(false);
         }
     }
 
@@ -38,7 +47,7 @@ const MessageArea = (props : {messagePayload : any}) => {
 
                 
             </div>
-            <div className="messages flex-1 mt-3 overflow-auto">
+            <div className="messages flex-1 mt-3 overflow-auto max-h-[29rem]">
                 {
                     props.messagePayload?.listData?.map((msgData : any, idx : string) => 
                         <div key={idx}>
@@ -74,16 +83,20 @@ const MessageArea = (props : {messagePayload : any}) => {
                 
             </div>
             <div className="sticky bottom-24">
+                {isMessageImp ? <p className='bg-white p-1 text-red-700 font-bold'>
+                    Important !
+                </p> : null}
                 <div className="write bg-white shadow flex rounded-lg">
-                    <div className="flex-3 flex content-center items-center text-center p-2 pr-0">
+                    <div className="flex-3 flex content-center items-center text-center p-1 pr-0">
                         <span className="block text-center text-gray-400 hover:text-gray-800">
-                            <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" className="h-6 w-6"><path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            <svg fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24" className="h-5 w-5"><path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         </span>
                     </div>
                     <div className="flex-1">
-                        <textarea name="message" ref={msg} className="w-full block outline-none py-2 px-2 bg-transparent" placeholder="Type a message..."></textarea>
+                        <textarea name="message" ref={msg} className="h-8 w-full block outline-none py-1 px-2 bg-transparent" placeholder="Type a message..."></textarea>
                     </div>
-                    <div className="flex-2 w-32 p-2 flex content-center items-center">
+                    <div className="flex-2 w-32 p-1 flex content-center items-center">
+                        
                         <div className="flex-1 text-center">
                             <span className="text-gray-400 hover:text-gray-800">
                                 <span className="inline-block align-text-bottom">
@@ -91,8 +104,11 @@ const MessageArea = (props : {messagePayload : any}) => {
                                 </span>
                             </span>
                         </div>
+                        <div className='flex-1 cursor-pointer'>
+                            <FaExclamation color={isMessageImp ? 'red' : 'black'} width={'1rem'} onClick={() => setImpMessage(!isMessageImp)}/>
+                        </div>
                         <div className="flex-1">
-                            <button className="bg-blue-400 w-10 h-10 rounded-full inline-block" onClick={() => sendMessage()}>
+                            <button className="bg-blue-400 w-7 h-7 rounded-full inline-block" onClick={() => sendMessage()}>
                                 <span className="inline-block align-text-bottom">
                                     <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" className="w-4 h-4 text-white"><path d="M5 13l4 4L19 7"></path></svg>
                                 </span>

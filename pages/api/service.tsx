@@ -25,8 +25,8 @@ export const getUserById = (id : string) => {
     return axios.get(FACEBOOK_CLONE_ENDPOINT + "/user/getUserById/" + id);
 }
 
-export const sendMessageToUser = (senderId: string, receiverId : string, grouper : string | null, message : string) => {
-    return axios.post(FACEBOOK_CLONE_ENDPOINT + "/message/post/", {senderId, receiverId, message, grouper }, {
+export const sendMessageToUser = (senderId: string, receiverId : string, grouper : string | null, message : string, isImp : any) => {
+    return axios.post(FACEBOOK_CLONE_ENDPOINT + "/message/post/", {senderId, receiverId, message, grouper, isImp }, {
         headers : {Accept : "application/json"}
     });
 }

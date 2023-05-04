@@ -26,11 +26,11 @@ const MessagingList = (props : {messageList : { [key:string] : MessagengerList} 
                             </div>
                             <div className="flex-2 text-right">
                                 <div><small className="text-gray-500">{message.ts}</small></div>
-                                <div>
+                                {/* <div>
                                     <small className="text-xs bg-red-500 text-white rounded-full h-6 w-6 leading-6 text-center inline-block">
                                         23
                                     </small>
-                                </div>
+                                </div> */}
                             </div>
                         </div>
                     )
